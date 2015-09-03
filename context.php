@@ -10,15 +10,16 @@ class APIContext
     $handler = $this->get_handler($action);
 
     $result = $handler->execute();
+	$result->pre_execute();
     $result->execute();
   }
 
-  public function register_handler(string $action_name, APIHandler $handler)
+  public function register_handler($action_name, APIHandler $handler)
   {
-    $_handlers[$action_name] = $handler;
+    $this->_handlers[$action_name] = $handler;
   }
 
-  private function get_handler(string $action_name)
+  private function get_handler($action_name)
   {
     if (array_key_exists($action_name, $this->_handlers))
     {

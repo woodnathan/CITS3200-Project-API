@@ -29,6 +29,11 @@ class APIHandler
 
 class APIResult
 {
+  public function pre_execute()
+  {
+
+  }
+
   public function execute()
   {
     die('APIResponse::execute is an abstract method');
@@ -41,6 +46,11 @@ class APIJSONResult extends APIResult
 
   function __construct($value) {
     $this->_value = $value;
+  }
+
+  public function pre_execute()
+  {
+    header('Content-Type: application/json');
   }
 
   public function execute()
