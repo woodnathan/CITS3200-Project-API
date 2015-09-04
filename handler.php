@@ -1,6 +1,6 @@
 <?php
 
-require_once ($_SERVER['DOCUMENT_ROOT'].'/milk/admin/scripts/db_connect.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/milk/admin/scripts/db_connect.php');
 
 class APIHandler
 {
