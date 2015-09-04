@@ -33,7 +33,10 @@ class APIContext
     {
       $handler = $this->_handlers[$action_name];
 
-      return $handler->execute();
+      $result = $handler->execute();
+      $handler->post_execute();
+
+      return $result;
     }
     else
     {

@@ -21,9 +21,21 @@ class APIHandler
 
   }
 
+  public function post_execute()
+  {
+    if ($this->_database != null)
+      $this->_database->close();
+  }
+
   protected function error($message)
   {
     return APIResult::Error($message);
+  }
+
+  protected function escape($value)
+  {
+    $db = $this->database();
+    return mysqli_real_escape_string($db, stripslashes($value));
   }
 }
 
