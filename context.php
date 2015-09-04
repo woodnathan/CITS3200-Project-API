@@ -1,16 +1,24 @@
 <?php
 
+require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/result.php');
+
 class APIContext
 {
   private $_handlers = array();
 
   public function execute()
   {
-    $action = $_GET['_action'];
-    $handler = $this->get_handler($action);
-
-    $result = $handler->execute();
-	$result->pre_execute();
+    $result = null;
+    if (array_key_exists('_action', $_GET))
+    {
+      $action = $_GET['_action'];
+      $result = $this->execute_handler($action);
+    }
+    else
+    {
+      $result = APIResult::Error('no action provided');
+    }
+	  $result->pre_execute();
     $result->execute();
   }
 
@@ -19,15 +27,17 @@ class APIContext
     $this->_handlers[$action_name] = $handler;
   }
 
-  private function get_handler($action_name)
+  private function execute_handler($action_name)
   {
     if (array_key_exists($action_name, $this->_handlers))
     {
-      return $this->_handlers[$action_name];
+      $handler = $this->_handlers[$action_name];
+
+      return $handler->execute();
     }
     else
     {
-      die("handle no handler in get_handler");
+      return APIResult::Error('invalid action provided');
     }
   }
 }

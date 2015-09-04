@@ -1,6 +1,7 @@
 <?php
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/milk/admin/scripts/db_connect.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/result.php');
 
 class APIHandler
 {
@@ -22,40 +23,7 @@ class APIHandler
 
   protected function error($message)
   {
-    $error = array('error' => $message);
-    return new APIJSONResult($error);
-  }
-}
-
-class APIResult
-{
-  public function pre_execute()
-  {
-
-  }
-
-  public function execute()
-  {
-    die('APIResponse::execute is an abstract method');
-  }
-}
-
-class APIJSONResult extends APIResult
-{
-  private $_value;
-
-  function __construct($value) {
-    $this->_value = $value;
-  }
-
-  public function pre_execute()
-  {
-    header('Content-Type: application/json');
-  }
-
-  public function execute()
-  {
-    echo(json_encode($this->_value));
+    return APIResult::Error($message);
   }
 }
 
