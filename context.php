@@ -33,8 +33,13 @@ class APIContext
     {
       $handler = $this->_handlers[$action_name];
 
-      $result = $handler->execute();
-      $handler->post_execute();
+      $pre_result = $handler->pre_execute();
+      $result = $pre_result;
+      if (!isset($pre_result))
+      {
+        $result = $handler->execute();
+        $handler->post_execute();
+      }
 
       return $result;
     }

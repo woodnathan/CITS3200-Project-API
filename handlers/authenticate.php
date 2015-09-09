@@ -6,9 +6,6 @@
   {
     public function execute()
     {
-      if ($_SERVER['REQUEST_METHOD'] !== 'POST')
-        return $this->error('POST method required');
-      
       if (!array_key_exists('username', $_POST))
         return $this->error('missing username parameter');
 

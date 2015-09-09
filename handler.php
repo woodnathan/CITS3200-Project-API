@@ -16,6 +16,13 @@ class APIHandler
     return $this->_database;
   }
 
+  public function pre_execute()
+  {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST')
+      return $this->error('POST method required');
+    return null;
+  }
+
   public function execute()
   {
 
