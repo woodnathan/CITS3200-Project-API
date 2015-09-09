@@ -46,10 +46,11 @@
       }
 
       $errors = array();
+      $motherID = $this->motherID();
       foreach ($feeds as $feed)
       {
         try {
-          $this->insert_sample($feed, 'p028');
+          $this->insert_sample($feed, $motherID);
         } catch (Exception $e) {
           array_push($errors, $e->getMessage());
         }
