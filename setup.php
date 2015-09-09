@@ -60,10 +60,10 @@ execute(<<<SQL
         time DATETIME NOT NULL,
         weight DECIMAL(6, 2) NOT NULL,
         fore_hind ENUM('B', 'A') NOT NULL,
-        left_right ENUM('L', 'R') NULL,
+        left_right ENUM('L', 'R', 'U') NULL,
         comment VARCHAR(250) NULL,
         feed_type ENUM('B', 'E', 'S') NOT NULL,
-        complementary_type ENUM('E', 'F') NULL,
+        complementary_type ENUM('E', 'F', 'U') NULL,
         ignore_calc ENUM('Y', 'N') NOT NULL,
         fore_sid INTEGER NULL
     );

@@ -78,8 +78,8 @@
       $comment = $feed->comment();
       $before_datetime = $feed->before_datetime();
       $before_weight = $feed->before_weight();
-      $after_datetime = $feed->before_datetime();
-      $after_weight = $feed->before_weight();
+      $after_datetime = $feed->after_datetime();
+      $after_weight = $feed->after_weight();
 
       $sql = "INSERT INTO `bbcs_v3`.`sample_reading` (SID,time,weight,fore_hind,left_right,comment,feed_type,complementary_type,ignore_calc) 
         VALUES ('$before_sno','$before_datetime','$before_weight','B','$left_right','$comment','$type','$complementary_type','$ignore_calc')";
