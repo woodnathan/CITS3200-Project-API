@@ -2,6 +2,7 @@
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/milk/admin/scripts/db_connect.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/result.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/error.php');
 
 class APIHandler
 {
@@ -20,13 +21,13 @@ class APIHandler
   public function pre_execute()
   {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
-      return $this->error('POST method required');
+      throw new APIError(APIError::POST_METHOD_REQUIRED);
 
     if (!isset($_SERVER['HTTP_X_MOTHER_USERNAME']))
-      return $this->error('X-Mother-Username header required');
+      throw new APIError(APIError::USERNAME_HEADER_REQUIRED);
 
     if (!isset($_SERVER['HTTP_X_MOTHER_PASSWORD']))
-      return $this->error('X-Mother-Password header required');
+      throw new APIError(APIError::PASSWORD_HEADER_REQUIRED);
 
     $db = $this->database();
 
@@ -35,13 +36,13 @@ class APIHandler
 
     $user_count_result = $db->query("SELECT COUNT(*) FROM `bbcs_v3`.`mother` WHERE MID = '$username'");
     $user_count = $user_count_result->fetch_row();
-    if ($user_count[0] == 0)
-      return $this->error('unknown user account');
     $user_count_result->close();
+    if ($user_count[0] == 0)
+      throw new APIError(APIError::UNKNOWN_USER_ACCOUNT);
 
     $user_result = $db->query("SELECT m.MID AS MID FROM `bbcs_v3`.`mother` m INNER JOIN `bbcs_v3`.`mother_details` md ON m.MID = md.MID WHERE m.MID = '$username' AND md.password = MD5('$password')");
     if ($user_result->num_rows == 0)
-      return $this->error('invalid password');
+      throw new APIError(APIError::INCORRECT_USER_PASSWORD);
 
     $row = $user_result->fetch_assoc();
     $this->_mid = $row['MID'];

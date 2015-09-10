@@ -33,7 +33,7 @@ SQL;
 
       $stmt->bind_param('s', $mid);
       if ($stmt->execute() === false)
-        return $this->error('failed to get feeds from database');
+        throw new APIError(APIError::SAMPLE_FETCH_FAILED);
 
       $stmt->bind_result(
         $sno,

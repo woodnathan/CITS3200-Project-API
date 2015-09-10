@@ -1,4 +1,6 @@
 <?php
+
+  require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/error.php');
   
   // Suppress the PHP warning
   date_default_timezone_set(@date_default_timezone_get());
@@ -109,25 +111,25 @@
     function validate()
     {
       if (!isset($this->type))
-        throw new Exception('invalid type provided');
+        throw new APIError(APIError::FEED_INVALID_TYPE);
 
       if ($this->type == APIFeedType::Breastfeed && !isset($this->side))
-        throw new Exception('side must be provided for type of Breastfeed');
+        throw new APIError(APIError::FEED_SIDE_REQUIRED);
 
       if ($this->type == APIFeedType::Expression && !isset($this->side))
-        throw new Exception('side must be provided for type of Expression');
+        throw new APIError(APIError::FEED_EXPRESSION_SIDE_REQUIRED);
 
       if ($this->type == APIFeedType::Supplementary && !isset($this->subtype))
-        throw new Exception('subtype must be provided for type of Supplementary');
+        throw new APIError(APIError::FEED_SUBTYPE_REQUIRED);
 
       if (!isset($this->before_datetime) || $this->before_datetime == 0)
-        throw new Exception('invalid before.date provided');
+        throw new APIError(APIError::FEED_INVALID_BEFORE_DATE);
 
       if (!isset($this->after_datetime) || $this->after_datetime == 0)
-        throw new Exception('invalid after.date provided');
+        throw new APIError(APIError::FEED_INVALID_AFTER_DATE);
 
       if ($this->after_datetime <= $this->before_datetime)
-        throw new Exception('after.date must occur after before.date');
+        throw new APIError(APIError::FEED_INVALID_DATES);
     }
 
     /**
@@ -156,7 +158,7 @@
         default:
           break;
       }
-      throw new Exception('invalid type');
+      throw new APIError(APIError::FEED_INVALID_TYPE);
     }
 
     function subtype()

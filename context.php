@@ -9,16 +9,19 @@ class APIContext
   public function execute()
   {
     $result = null;
-    if (array_key_exists('_action', $_GET))
+    try
     {
+      if (!array_key_exists('_action', $_GET))
+        throw new APIError(APIError::API_ACTION_REQUIRED);
+
       $action = $_GET['_action'];
       $result = $this->execute_handler($action);
     }
-    else
+    catch (APIError $e)
     {
-      $result = APIResult::Error('no action provided');
+      $result = $e->result();
     }
-	  $result->pre_execute();
+    $result->pre_execute();
     $result->execute();
   }
 
@@ -29,24 +32,20 @@ class APIContext
 
   private function execute_handler($action_name)
   {
-    if (array_key_exists($action_name, $this->_handlers))
-    {
-      $handler = $this->_handlers[$action_name];
+    if (!array_key_exists($action_name, $this->_handlers))
+      throw new APIError(APIError::API_ACTION_INVALID);
+    
+    $handler = $this->_handlers[$action_name];
 
-      $pre_result = $handler->pre_execute();
-      $result = $pre_result;
-      if (!isset($pre_result))
-      {
-        $result = $handler->execute();
-        $handler->post_execute();
-      }
-
-      return $result;
-    }
-    else
+    $pre_result = $handler->pre_execute();
+    $result = $pre_result;
+    if (!isset($pre_result))
     {
-      return APIResult::Error('invalid action provided');
+      $result = $handler->execute();
+      $handler->post_execute();
     }
+
+    return $result;
   }
 }
 

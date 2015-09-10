@@ -6,7 +6,7 @@
   {
     public function execute()
     {
-      return $this->error('authentication is not implemented');
+      return APIResult::Error('authentication is not implemented');
     }
   }
 

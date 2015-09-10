@@ -13,7 +13,7 @@
         return $result;
 
       if (stristr($_SERVER["CONTENT_TYPE"], 'json') === false)
-      return $this->error('Content-Type must be JSON');
+        throw new APIError(APIError::CONTENT_TYPE_JSON_REQUIRED);
 
       return null;
     }
@@ -24,7 +24,7 @@
       $data = json_decode($raw_data);
 
       if (!isset($data->feeds) || !is_array($data->feeds))
-        return $this->error('request format is invalid');
+        throw new APIError(APIError::REQUEST_FORMAT_INVALID);
 
       $db = $this->database();
 
@@ -35,12 +35,8 @@
       {
         $feed = new APIFeed($data_feed, $db /* for string escaping */);
 
-        try {
-          $feed->validate();
-        } catch (Exception $e) {
-          $validation = $e->getMessage();
-          return $this->error($validation);
-        }
+        // This will throw an APIError if it doesn't validate
+        $feed->validate();
 
         array_push($feeds, $feed);
       }
@@ -56,7 +52,7 @@
         }
       }
 
-      return $this->error($errors);
+      return APIResult::Error($errors);
     }
 
     private function insert_sample(APIFeed $feed, $mid)
@@ -84,7 +80,7 @@
       $sql = "INSERT INTO `bbcs_v3`.`sample_reading` (SID,time,weight,fore_hind,left_right,comment,feed_type,complementary_type,ignore_calc) 
         VALUES ('$before_sno','$before_datetime','$before_weight','B','$left_right','$comment','$type','$complementary_type','$ignore_calc')";
       if ($db->query($sql) === false)
-        throw new Exception('failed to insert before sample into database');
+        throw new APIError(APIError::SAMPLE_SAVE_FAILED);
       
       $nextid = mysqli_insert_id($db); // Returns id generated with auto_increment with last query
 
@@ -92,7 +88,7 @@
           values ('$after_sno','$after_datetime','$after_weight','A','$left_right','$comment','$type','$complementary_type','$ignore_calc','$nextid')";
 
       if ($db->query($sql1) === false)
-        throw new Exception('failed to insert after sample into database');
+        throw new APIError(APIError::SAMPLE_SAVE_FAILED);
 
       $sql_get_sno = "SELECT MAX(SNO) AS SNO FROM `bbcs_v3`.`r_calc_feed_and_sample` WHERE MID = '$mid'";
       $result = $db->query($sql_get_sno);
