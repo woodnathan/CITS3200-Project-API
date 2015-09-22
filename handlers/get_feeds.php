@@ -53,16 +53,15 @@ SQL;
       while ($stmt->fetch())
       {
         array_push($feeds, array(
-          "SNO" => $sno,
           "before" => array(
             "SID" => $before_SID,
             "date" => date('Y-m-d\TH:i:s\Z', strtotime($before_time)),
-            "weight" => $before_weight
+            "weight" => floatval($before_weight)
           ),
           "after" => array(
             "SID" => $after_SID,
             "date" => date('Y-m-d\TH:i:s\Z', strtotime($after_time)),
-            "weight" => $after_weight
+            "weight" => floatval($after_weight)
           ),
           "comment" => $comment,
           "type" => $type,
@@ -72,7 +71,7 @@ SQL;
       }
 
 
-      return new APIJSONResult(array("feeds" => $feeds));
+      return new APIJSONResult(array('feeds' => $feeds));
     }
   }
 

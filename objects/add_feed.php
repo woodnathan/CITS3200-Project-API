@@ -22,7 +22,7 @@
     const Right = 2;
   }
 
-  class APIFeed
+  class APIAddFeed
   {
     private $type; // APIFeedType
     private $subtype; // APIFeedSubtype
@@ -65,19 +65,19 @@
       {
         $type = mysqli_real_escape_string($db, $json->type);
         $type = strtoupper($type[0]);
-        $this->type = APIFeed::$type_mapping[$type];
+        $this->type = APIAddFeed::$type_mapping[$type];
       }
       if (isset($json->subtype) && !empty($json->subtype))
       {
         $subtype = mysqli_real_escape_string($db, $json->subtype);
         $subtype = strtoupper($subtype[0]);
-        $this->subtype = APIFeed::$subtype_mapping[$subtype];
+        $this->subtype = APIAddFeed::$subtype_mapping[$subtype];
       }
       if (isset($json->side) && !empty($json->side))
       {
         $side = mysqli_real_escape_string($db, $json->side);
         $side = strtoupper($side[0]);
-        $this->side = APIFeed::$side_mapping[$side];
+        $this->side = APIAddFeed::$side_mapping[$side];
       }
 
       if (isset($json->comment))

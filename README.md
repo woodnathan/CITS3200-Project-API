@@ -110,7 +110,68 @@ The `authenticate` action has been deprecated. Use the `user_info` action with t
 ```
 
 ### Edit Feeds
-**Not implemented yet**
+**Action Name:** `edit_feeds`  
+**Request Parameters:**
+
+```
+{
+  "feeds": [
+    {
+      "after": {
+        "SID": 2,
+        "weight": 470.0
+      }
+    },
+    {
+      "before": {
+        "SID": 3
+      },
+      "side": "R"
+    }
+  ]
+}
+```
+  
+**Example Response:**
+
+```
+{
+  "feeds": [
+    {
+      "before": {
+        "SID": 1,
+        "date": "2015-01-01T07:30:00Z",
+        "weight": 400.00
+      },
+      "after": {
+        "SID": 2,
+        "date": "2015-01-01T08:00:00Z",
+        "weight": 470.00
+      },
+      "comment": "spilled a little",
+      "type": "B",
+      "subtype": "U",
+      "side": "R"
+    },
+    {
+      "before": {
+        "SID": 3,
+        "date": "2015-01-01T08:01:00Z",
+        "weight": 10.00
+      },
+      "after": {
+        "SID": 4,
+        "date": "2015-01-01T08:12:00Z",
+        "weight": 460.00
+      },
+      "comment": "",
+      "type": "E",
+      "subtype": "U",
+      "side": "R"
+    }
+  ]
+}
+```
 
 ### Get Feeds
 **Action Name:** `get_feeds`  
@@ -121,16 +182,15 @@ The `authenticate` action has been deprecated. Use the `user_info` action with t
 {
   "feeds": [
     {
-      "SNO": 1,
       "before": {
         "SID": 1,
         "date": "2015-01-01T07:30:00Z",
-        "weight": "400.00"
+        "weight": 400.00
       },
       "after": {
         "SID": 2,
         "date": "2015-01-01T08:00:00Z",
-        "weight": "450.00"
+        "weight": 450.00
       },
       "comment": "spilled a little",
       "type": "B",
@@ -138,16 +198,15 @@ The `authenticate` action has been deprecated. Use the `user_info` action with t
       "side": "R"
     },
     {
-      "SNO": 2,
       "before": {
         "SID": 3,
         "date": "2015-01-01T08:01:00Z",
-        "weight": "10.00"
+        "weight": 10.00
       },
       "after": {
         "SID": 4,
         "date": "2015-01-01T08:12:00Z",
-        "weight": "460.00"
+        "weight": 460.00
       },
       "comment": "",
       "type": "E",
@@ -155,16 +214,15 @@ The `authenticate` action has been deprecated. Use the `user_info` action with t
       "side": "L"
     },
     {
-      "SNO": 0,
       "before": {
         "SID": 5,
         "date": "2015-01-01T13:10:00Z",
-        "weight": "470.00"
+        "weight": 470.00
       },
       "after": {
         "SID": 6,
         "date": "2015-01-01T13:19:00Z",
-        "weight": "485.00"
+        "weight": 485.00
       },
       "comment": "",
       "type": "S",

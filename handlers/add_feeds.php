@@ -2,26 +2,13 @@
 
   require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/handler.php');
   
-  require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/objects/feed.php');
+  require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/objects/add_feed.php');
 
-  class APIAddFeedsHandler extends APIHandler
+  class APIAddFeedsHandler extends APIJSONHandler
   {
-    public function pre_execute()
-    {
-      $result = parent::pre_execute();
-      if (isset($result))
-        return $result;
-
-      if (stristr($_SERVER["CONTENT_TYPE"], 'json') === false)
-        throw new APIError(APIError::CONTENT_TYPE_JSON_REQUIRED);
-
-      return null;
-    }
-
     public function execute()
     {
-      $raw_data = file_get_contents('php://input');
-      $data = json_decode($raw_data);
+      $data = $this->data();
 
       if (!isset($data->feeds) || !is_array($data->feeds))
         throw new APIError(APIError::REQUEST_FORMAT_INVALID);
@@ -33,7 +20,7 @@
       $feeds = array();
       foreach ($data_feeds as $data_feed)
       {
-        $feed = new APIFeed($data_feed, $db /* for string escaping */);
+        $feed = new APIAddFeed($data_feed, $db /* for string escaping */);
 
         // This will throw an APIError if it doesn't validate
         $feed->validate();
@@ -55,7 +42,7 @@
       return APIResult::Error($errors);
     }
 
-    private function insert_sample(APIFeed $feed, $mid)
+    private function insert_sample(APIAddFeed $feed, $mid)
     {
       $db = $this->database();
 

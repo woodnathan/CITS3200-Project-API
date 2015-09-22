@@ -40,6 +40,12 @@ class APIError extends Exception
   const SAMPLE_SAVE_FAILED = 400;
   const SAMPLE_FETCH_FAILED = 401;
 
+  const SAMPLE_INVALID_BEFORE_SID = 500;
+  const SAMPLE_INVALID_AFTER_SID = 501;
+  const SAMPLE_ONE_SID_REQUIRED = 502;
+  const SAMPLE_SIDS_INVALID = 503;
+  const SAMPLE_SID_PERMISSIONS = 504;
+
   private static $messages = array(
     self::POST_METHOD_REQUIRED => 'POST method required',
     self::API_ACTION_REQUIRED => 'no action provided',
@@ -62,6 +68,12 @@ class APIError extends Exception
 
     self::SAMPLE_SAVE_FAILED => 'failed to insert sample into database',
     self::SAMPLE_FETCH_FAILED => 'failed to get feeds from database',
+
+    self::SAMPLE_INVALID_BEFORE_SID => 'the before sample SID is invalid',
+    self::SAMPLE_INVALID_AFTER_SID => 'the after sample SID is invalid',
+    self::SAMPLE_ONE_SID_REQUIRED => 'at least one sample SID must be provided',
+    self::SAMPLE_SIDS_INVALID => 'provided sample SIDs did not match expected SIDs',
+    self::SAMPLE_SID_PERMISSIONS => 'provided sample SIDs do not belong to user'
   );
 
   function __construct($code)

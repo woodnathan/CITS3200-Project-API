@@ -79,4 +79,26 @@ class APIHandler
   }
 }
 
+class APIJSONHandler extends APIHandler
+{
+  public function pre_execute()
+  {
+    $result = parent::pre_execute();
+    if (isset($result))
+      return $result;
+
+    if (stristr($_SERVER['CONTENT_TYPE'], 'json') === false)
+      throw new APIError(APIError::CONTENT_TYPE_JSON_REQUIRED);
+
+    return null;
+  }
+
+  protected function data()
+  {
+      $raw_data = file_get_contents('php://input');
+      $data = json_decode($raw_data);
+      return $data;
+  }
+}
+
 ?>
