@@ -22,7 +22,7 @@
         'collecting_samples' => $collecting_samples
       );
 
-      return new APIJSONResult(array('user' => $user));
+      return new APIJSONResult(array('user' => $user_details));
     }
   }
 
