@@ -6,7 +6,7 @@
   {
     public function execute()
     {
-      return APIResult::Error('authentication is not implemented');
+      return APIResult::Error('authenticate has been deprecated, use user_info instead');
     }
   }
 

@@ -30,6 +30,7 @@ function execute($query)
 
 execute('DROP TABLE `bbcs_v3`.`r_calc_feed_and_sample`;');
 execute('DROP TABLE `bbcs_v3`.`sample_reading`;');
+execute('DROP TABLE `bbcs_v3`.`mother_studies`;');
 execute('DROP TABLE `bbcs_v3`.`mother_details`;');
 execute('DROP TABLE `bbcs_v3`.`mother`;');
 
@@ -49,6 +50,15 @@ execute(<<<SQL
     CREATE TABLE `bbcs_v3`.`mother_details` (
         MID VARCHAR(250) PRIMARY KEY,
         password VARCHAR(32) NOT NULL,
+        FOREIGN KEY (MID) REFERENCES mother(MID)
+    );
+SQL
+);
+
+execute(<<<SQL
+    CREATE TABLE `bbcs_v3`.`mother_studies` (
+        MID VARCHAR(250) PRIMARY KEY,
+        collecting_samples ENUM('Y', 'N') NOT NULL DEFAULT 'Y',
         FOREIGN KEY (MID) REFERENCES mother(MID)
     );
 SQL
@@ -92,6 +102,11 @@ SQL
     
 execute(<<<SQL
     INSERT INTO `bbcs_v3`.`mother_details` (MID, password) VALUES ('p028', MD5('student'));
+SQL
+);
+    
+execute(<<<SQL
+    INSERT INTO `bbcs_v3`.`mother_studies` (MID, collecting_samples) VALUES ('p028', 'Y');
 SQL
 );
 
