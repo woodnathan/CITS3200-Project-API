@@ -55,12 +55,12 @@ SQL;
         array_push($feeds, array(
           "before" => array(
             "SID" => $before_SID,
-            "date" => date('Y-m-d\TH:i:s\Z', strtotime($before_time)),
+            "date" => date('Y-m-d\TH:i:s\Z', @strtotime($before_time)),
             "weight" => floatval($before_weight)
           ),
           "after" => array(
             "SID" => $after_SID,
-            "date" => date('Y-m-d\TH:i:s\Z', strtotime($after_time)),
+            "date" => date('Y-m-d\TH:i:s\Z', @strtotime($after_time)),
             "weight" => floatval($after_weight)
           ),
           "comment" => $comment,

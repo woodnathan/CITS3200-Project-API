@@ -19,7 +19,8 @@
   $context->register_handler('get_feeds', new APIGetFeedsHandler());
   $context->register_handler('edit_feeds', new APIEditFeedsHandler());
 
-
+  // This simply handles the current request
+  // and maps it to the correct handler
   $context->execute();
 
 ?>

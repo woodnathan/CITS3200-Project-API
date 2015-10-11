@@ -4,6 +4,11 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/milk/admin/scripts/db_connect.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/result.php');
 require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/error.php');
 
+/**
+ * @brief An abstract class for each API action
+ * @details Also provides conveniences like database connection and
+ *          authentication
+ */
 class APIHandler
 {
   private $_database = null;
@@ -18,6 +23,15 @@ class APIHandler
     return $this->_database;
   }
 
+  /**
+   * @brief The pre-execute function for the handler allows the handler
+   *        to bail out of execution before it begins
+   * @details The default implementation ensures HTTP POST is used, and also
+   *          handles user authentication. It also stores the user ID from the
+   *          database for the handler to use as a part of the execution.
+   * @return null, or an APIResult instance to prevent execution
+   * @throws APIError
+   */
   public function pre_execute()
   {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST')
@@ -51,22 +65,39 @@ class APIHandler
     return null;
   }
 
+  /**
+   * @brief Function stub for execution
+   * @return An APIResult instance
+   */
   public function execute()
   {
 
   }
 
+  /**
+   * @brief A function to be called after the execution of the handler
+   * @return nothing
+   */
   public function post_execute()
   {
     if ($this->_database != null)
       $this->_database->close();
   }
 
+  /**
+   * @brief A convenience method to create APIResult for an error (DEPRECATED)
+   * @return An APIResult instance
+   */
   protected function error($message)
   {
     return APIResult::Error($message);
   }
 
+  /**
+   * @brief Convenience method to escape a string to prevent SQL injection
+   * @param  value the string to escape
+   * @return an escaped string
+   */
   protected function escape($value)
   {
     $db = $this->database();
@@ -79,8 +110,16 @@ class APIHandler
   }
 }
 
+/**
+ * @brief A subclass of APIHandler that expects a JSON HTTP body
+ */
 class APIJSONHandler extends APIHandler
 {
+  /**
+   * @brief Overrides the default pre-execute function to ensure that
+   *        the request's Content-Type is json
+   * @return null, or an APIResult object
+   */
   public function pre_execute()
   {
     $result = parent::pre_execute();
@@ -93,6 +132,10 @@ class APIJSONHandler extends APIHandler
     return null;
   }
 
+  /**
+   * @brief Decodes the HTTP body as JSON
+   * @return An stdClass instance of the JSON decoded HTTP body
+   */
   protected function data()
   {
       $raw_data = file_get_contents('php://input');

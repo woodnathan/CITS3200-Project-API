@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @brief A class that represents a value to be returned in the response
+ */
 class APIResult
 {
   public static function Error($message)

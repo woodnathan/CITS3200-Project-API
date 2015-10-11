@@ -2,8 +2,15 @@
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/result.php');
 
+/**
+ * @brief Represents the JSON result of an error with a code and message
+ */
 class APIErrorResult extends APIJSONResult
 {
+  /**
+   * @param  code    an integer value representing the unique error code
+   * @param  message a simple message describing the error
+   */
   function __construct($code, $message)
   {
     $value = array(
@@ -16,6 +23,11 @@ class APIErrorResult extends APIJSONResult
   }
 }
 
+/**
+ * @brief An Exception subclass to centralise all error codes and messages
+ *        as well as provide convenience for obtaining an APIErrorResult
+ *        object
+ */
 class APIError extends Exception
 {
   const POST_METHOD_REQUIRED = 100;
@@ -82,6 +94,10 @@ class APIError extends Exception
     parent::__construct($message, $code, null);
   }
 
+  /**
+   * @brief Creates an APIErrorResult object representing the API Exception
+   * @return an APIErrorResult object
+   */
   public function result()
   {
     $code = $this->code;
