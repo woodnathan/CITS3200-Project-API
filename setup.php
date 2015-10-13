@@ -59,6 +59,7 @@ execute(<<<SQL
     CREATE TABLE `bbcs_v3`.`mother_studies` (
         MID VARCHAR(250) PRIMARY KEY,
         collecting_samples ENUM('Y', 'N') NOT NULL DEFAULT 'Y',
+        consent_form ENUM('Y', 'N') NOT NULL DEFAULT 'Y',
         FOREIGN KEY (MID) REFERENCES mother(MID)
     );
 SQL
@@ -98,15 +99,52 @@ SQL
 execute(<<<SQL
     INSERT INTO `bbcs_v3`.`mother` (MID) VALUES ('p028');
 SQL
-);
-    
+);  
 execute(<<<SQL
     INSERT INTO `bbcs_v3`.`mother_details` (MID, password) VALUES ('p028', MD5('student'));
 SQL
-);
-    
+);  
 execute(<<<SQL
-    INSERT INTO `bbcs_v3`.`mother_studies` (MID, collecting_samples) VALUES ('p028', 'Y');
+    INSERT INTO `bbcs_v3`.`mother_studies` (MID, collecting_samples, consent_form) VALUES ('p028', 'Y', 'Y');
+SQL
+);
+
+execute(<<<SQL
+    INSERT INTO `bbcs_v3`.`mother` (MID) VALUES ('p029');
+SQL
+);  
+execute(<<<SQL
+    INSERT INTO `bbcs_v3`.`mother_details` (MID, password) VALUES ('p029', MD5('student'));
+SQL
+);  
+execute(<<<SQL
+    INSERT INTO `bbcs_v3`.`mother_studies` (MID, collecting_samples, consent_form) VALUES ('p029', 'Y', 'N');
+SQL
+);
+
+execute(<<<SQL
+    INSERT INTO `bbcs_v3`.`mother` (MID) VALUES ('p030');
+SQL
+);  
+execute(<<<SQL
+    INSERT INTO `bbcs_v3`.`mother_details` (MID, password) VALUES ('p030', MD5('student'));
+SQL
+);  
+execute(<<<SQL
+    INSERT INTO `bbcs_v3`.`mother_studies` (MID, collecting_samples, consent_form) VALUES ('p030', 'N', 'Y');
+SQL
+);
+
+execute(<<<SQL
+    INSERT INTO `bbcs_v3`.`mother` (MID) VALUES ('p031');
+SQL
+);  
+execute(<<<SQL
+    INSERT INTO `bbcs_v3`.`mother_details` (MID, password) VALUES ('p031', MD5('student'));
+SQL
+);  
+execute(<<<SQL
+    INSERT INTO `bbcs_v3`.`mother_studies` (MID, collecting_samples, consent_form) VALUES ('p031', 'N', 'N');
 SQL
 );
 

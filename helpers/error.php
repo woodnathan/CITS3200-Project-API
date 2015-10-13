@@ -1,6 +1,6 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/result.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/helpers/result.php');
 
 /**
  * @brief Represents the JSON result of an error with a code and message
@@ -11,7 +11,7 @@ class APIErrorResult extends APIJSONResult
    * @param  code    an integer value representing the unique error code
    * @param  message a simple message describing the error
    */
-  function __construct($code, $message)
+  function __construct($code, $message, $stack_trace = null)
   {
     $value = array(
       'error' => array(
@@ -19,6 +19,24 @@ class APIErrorResult extends APIJSONResult
         'message' => strval($message)
       )
     );
+
+    if (isset($stack_trace) && is_array($stack_trace) && isset($_SERVER['HTTP_X_MOTHER_DEBUG']))
+    {
+      $stack_lines = array();
+      foreach ($stack_trace as $trace)
+      {
+        $file = strval($trace['file']);
+        $line_number = intval($trace['line']);
+        $function = strval($trace['function']);
+        // $args = implode(', ', $trace['args']);
+
+        $stack_line = $file . '(' . $line_number . '): ' . $function . '()';
+        array_push($stack_lines, $stack_line);
+      }
+
+      $value['stack_trace'] = $stack_lines;
+    }
+
     parent::__construct($value);
   }
 }
@@ -51,6 +69,8 @@ class APIError extends Exception
 
   const SAMPLE_SAVE_FAILED = 400;
   const SAMPLE_FETCH_FAILED = 401;
+  const SAMPLE_MOTHER_LAST_UPDATE_FAILED = 402;
+  const SAMPLE_SAVE_CALC_FAILED = 403;
 
   const SAMPLE_INVALID_BEFORE_SID = 500;
   const SAMPLE_INVALID_AFTER_SID = 501;
@@ -80,6 +100,8 @@ class APIError extends Exception
 
     self::SAMPLE_SAVE_FAILED => 'failed to insert sample into database',
     self::SAMPLE_FETCH_FAILED => 'failed to get feeds from database',
+    self::SAMPLE_MOTHER_LAST_UPDATE_FAILED => 'failed to update the last updated field to now in mother database',
+    self::SAMPLE_SAVE_CALC_FAILED => 'failed to insert sample calcuation',
 
     self::SAMPLE_INVALID_BEFORE_SID => 'the before sample SID is invalid',
     self::SAMPLE_INVALID_AFTER_SID => 'the after sample SID is invalid',
@@ -102,7 +124,8 @@ class APIError extends Exception
   {
     $code = $this->code;
     $message = $this->message;
-    return new APIErrorResult($code, $message);
+    $stack_trace = @$this->getTrace();
+    return new APIErrorResult($code, $message, $stack_trace);
   }
 }
 

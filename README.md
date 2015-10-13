@@ -27,12 +27,17 @@ X-Mother-Password: password
 
 Two custom headers are used to authenticate API requests: `X-Mother-Username` and `X-Mother-Password`. Both of these must be supplied with each request, failing to supply either will result in an API error.
 
+## Debugging
+
+It's possible to provide a `X-Mother-Debug` header (the value is ignored) to receive a stack trace of the server side exceptions.
+
 ## Actions
 
 - [Authenticate](#authenticate)
 - [User Info](#user-info)
 - [Add Feeds](#add-feeds)
 - [Edit Feeds](#edit-feeds)
+- [Delete Feeds](#delete-feeds)
 - [Get Feeds](#get-feeds)
 
 ### Authenticate
@@ -47,7 +52,8 @@ The `authenticate` action has been deprecated. Use the `user_info` action with t
 ```
 {
   "user": {
-    "collecting_samples": true
+    "collecting_samples": true,
+    "accepted_consent_form": true
   }
 }
 ```
@@ -105,7 +111,85 @@ The `authenticate` action has been deprecated. Use the `user_info` action with t
 
 ```
 {
-  "errors": []
+  "feeds": [
+    {
+      "before": {
+        "SID": 1,
+        "date": "2015-01-01T07:30:00Z",
+        "weight": 400.00
+      },
+      "after": {
+        "SID": 2,
+        "date": "2015-01-01T08:00:00Z",
+        "weight": 450.00
+      },
+      "comment": "spilled a little",
+      "type": "B",
+      "subtype": "U",
+      "side": "R"
+    },
+    {
+      "before": {
+        "SID": 3,
+        "date": "2015-01-01T08:01:00Z",
+        "weight": 10.00
+      },
+      "after": {
+        "SID": 4,
+        "date": "2015-01-01T08:12:00Z",
+        "weight": 460.00
+      },
+      "comment": "",
+      "type": "E",
+      "subtype": "U",
+      "side": "L"
+    },
+    {
+      "before": {
+        "SID": 5,
+        "date": "2015-01-01T13:10:00Z",
+        "weight": 470.00
+      },
+      "after": {
+        "SID": 6,
+        "date": "2015-01-01T13:19:00Z",
+        "weight": 485.00
+      },
+      "comment": "",
+      "type": "S",
+      "subtype": "F",
+      "side": "U"
+    }
+  ]
+}
+```
+
+### Delete Feeds
+**Action Name:** `delete_feeds`  
+**Request Parameters:**
+
+```
+{
+  "feeds": [
+    {
+      "after": {
+        "SID": 2
+      }
+    },
+    {
+      "before": {
+        "SID": 3
+      }
+    }
+  ]
+}
+```
+  
+**Example Response:**
+
+```
+{
+  "feeds": [ ]
 }
 ```
 
@@ -266,3 +350,10 @@ If an API error occurs the response will follow this format:
 | 306  | The date value pair provided is invalid. The after date must occur after the before date. |
 | 400  | An error occurred whilst attempting to save the feed to the database. |
 | 401  | An error occurred whilst attempting to fetch the feeds from the database. |
+| 402  | An error occurred whilst attempting to updating the mother.last_update_at column in the database. |
+| 403  | An error occurred whilst attempting to save the feed calculation to the database. |
+| 500  | The provided SID for the before in the POST data is invalid. |
+| 501  | The provided SID for the after in the POST data is invalid. |
+| 502  | At least one SID must be provided (either before or after) for each feed in the POST data. |
+| 503  | The provided SIDs are invalid because they do not relate to each other. |
+| 504  | The provided SIDs are invalid because they do not belong to the authenticated user. |

@@ -46,9 +46,9 @@
     {
       $unchanged_fields = array();
 
-      $this->fill_field($values, $unchanged_fields, 'type');
-      $this->fill_field($values, $unchanged_fields, 'subtype');
-      $this->fill_field($values, $unchanged_fields, 'side');
+      $this->fill_field($values, $unchanged_fields, 'type', array($this, 'type_from_string'));
+      $this->fill_field($values, $unchanged_fields, 'subtype', array($this, 'subtype_from_string'));
+      $this->fill_field($values, $unchanged_fields, 'side', array($this, 'side_from_string'));
       $this->fill_field($values, $unchanged_fields, 'comment');
       $this->fill_field($values, $unchanged_fields, 'before_datetime', 'strtotime');
       $this->fill_field($values, $unchanged_fields, 'before_weight', 'floatval');

@@ -28,18 +28,16 @@
         array_push($feeds, $feed);
       }
 
-      $errors = array();
+      $feed_assocs = array();
       $motherID = $this->motherID();
       foreach ($feeds as $feed)
       {
-        try {
-          $this->insert_sample($feed, $motherID);
-        } catch (Exception $e) {
-          array_push($errors, $e->getMessage());
-        }
+        $this->insert_sample($feed, $motherID);
+
+        array_push($feed_assocs, $feed->get_assoc());
       }
 
-      return APIResult::Error($errors);
+      return new APIJSONResult(array('feeds' => $feed_assocs));
     }
 
     private function insert_sample(APIAddFeed $feed, $mid)
@@ -105,13 +103,13 @@
                   VALUES ('$mid', '$after_sno', '$sno')";
 
       if ($db->query($sql2) === false)
-        throw new Exception('Error in updating now field in mother database');
+        throw new APIError(APIError::SAMPLE_MOTHER_LAST_UPDATE_FAILED);
 
       if ($db->query($sql_update_r_before) === false)
-        throw new Exception('Error with updating before feed and sample.');
+        throw new APIError(APIError::SAMPLE_SAVE_CALC_FAILED);
 
       if ($db->query($sql_update_r_after) === false)
-        throw new Exception('Error with updating after feed and sample.');
+        throw new APIError(APIError::SAMPLE_SAVE_CALC_FAILED); 
     }
   }
 

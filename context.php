@@ -1,6 +1,6 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/result.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/helpers/result.php');
 
 /**
  * @brief The APIContext class maintains the list of handlers

@@ -52,6 +52,9 @@ SQL;
       $feeds = array();
       while ($stmt->fetch())
       {
+        if (preg_match('/^delete/i', $comment))
+          continue;
+        
         array_push($feeds, array(
           "before" => array(
             "SID" => $before_SID,

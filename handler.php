@@ -1,8 +1,8 @@
 <?php
 
 require_once($_SERVER['DOCUMENT_ROOT'].'/milk/admin/scripts/db_connect.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/result.php');
-require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/error.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/helpers/result.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/helpers/error.php');
 
 /**
  * @brief An abstract class for each API action
