@@ -32,6 +32,8 @@ execute('DROP TABLE `bbcs_v3`.`r_calc_feed_and_sample`;');
 execute('DROP TABLE `bbcs_v3`.`sample_reading`;');
 execute('DROP TABLE `bbcs_v3`.`mother_studies`;');
 execute('DROP TABLE `bbcs_v3`.`mother_details`;');
+execute('DROP TABLE `bbcs_v3`.`mother_studies_type`;');
+execute('DROP TABLE `bbcs_v3`.`mother_studies_econsent`;');
 execute('DROP TABLE `bbcs_v3`.`mother`;');
 
 /**
@@ -93,58 +95,59 @@ execute(<<<SQL
 SQL
 );
 
+execute(<<<SQL
+    CREATE TABLE `bbcs_v3`.`mother_studies_type` (
+        MID VARCHAR(250),
+        infoPump ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoMilkRemoval ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoEffect ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoCellular ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoParticipation ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoPerception ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoComposition ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoBrainwave ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        FOREIGN KEY (MID) REFERENCES mother(MID)
+    );
+SQL
+);
+
+execute(<<<SQL
+    CREATE TABLE `bbcs_v3`.`mother_studies_econsent` (
+        MID VARCHAR(250),
+        infoPump_consent ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoMilkRemoval_consent ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoEffect_consent ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoCellular_consent ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoParticipation_consent ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoPerception_consent ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoComposition_consent ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        infoBrainwave_consent ENUM('Y', 'N') NOT NULL DEFAULT 'N',
+        FOREIGN KEY (MID) REFERENCES mother(MID)
+    );
+SQL
+);
+
 /**
  * Insert data
  */
 execute(<<<SQL
     INSERT INTO `bbcs_v3`.`mother` (MID) VALUES ('p028');
 SQL
-);  
+);
 execute(<<<SQL
     INSERT INTO `bbcs_v3`.`mother_details` (MID, password) VALUES ('p028', MD5('student'));
 SQL
-);  
+);
 execute(<<<SQL
     INSERT INTO `bbcs_v3`.`mother_studies` (MID, collecting_samples, consent_form) VALUES ('p028', 'Y', 'Y');
 SQL
 );
-
 execute(<<<SQL
-    INSERT INTO `bbcs_v3`.`mother` (MID) VALUES ('p029');
-SQL
-);  
-execute(<<<SQL
-    INSERT INTO `bbcs_v3`.`mother_details` (MID, password) VALUES ('p029', MD5('student'));
-SQL
-);  
-execute(<<<SQL
-    INSERT INTO `bbcs_v3`.`mother_studies` (MID, collecting_samples, consent_form) VALUES ('p029', 'Y', 'N');
+    INSERT INTO `bbcs_v3`.`mother_studies_type` (MID, infoPump, infoComposition) VALUES ('p028', 'Y', 'Y');
 SQL
 );
-
 execute(<<<SQL
-    INSERT INTO `bbcs_v3`.`mother` (MID) VALUES ('p030');
-SQL
-);  
-execute(<<<SQL
-    INSERT INTO `bbcs_v3`.`mother_details` (MID, password) VALUES ('p030', MD5('student'));
-SQL
-);  
-execute(<<<SQL
-    INSERT INTO `bbcs_v3`.`mother_studies` (MID, collecting_samples, consent_form) VALUES ('p030', 'N', 'Y');
-SQL
-);
-
-execute(<<<SQL
-    INSERT INTO `bbcs_v3`.`mother` (MID) VALUES ('p031');
-SQL
-);  
-execute(<<<SQL
-    INSERT INTO `bbcs_v3`.`mother_details` (MID, password) VALUES ('p031', MD5('student'));
-SQL
-);  
-execute(<<<SQL
-    INSERT INTO `bbcs_v3`.`mother_studies` (MID, collecting_samples, consent_form) VALUES ('p031', 'N', 'N');
+    INSERT INTO `bbcs_v3`.`mother_studies_econsent` (MID, infoPump_consent, infoComposition_consent) VALUES ('p028', 'N', 'Y');
 SQL
 );
 

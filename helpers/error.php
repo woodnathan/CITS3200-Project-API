@@ -10,6 +10,7 @@ class APIErrorResult extends APIJSONResult
   /**
    * @param  code    an integer value representing the unique error code
    * @param  message a simple message describing the error
+   * @param  stack_trace an optional stack trace as an array
    */
   function __construct($code, $message, $stack_trace = null)
   {
@@ -58,6 +59,7 @@ class APIError extends Exception
 
   const UNKNOWN_USER_ACCOUNT = 200;
   const INCORRECT_USER_PASSWORD = 201;
+  const USER_CONSENT_FETCH_FAILED = 202;
 
   const FEED_INVALID_TYPE = 300;
   const FEED_SIDE_REQUIRED = 301;
@@ -89,6 +91,7 @@ class APIError extends Exception
 
     self::UNKNOWN_USER_ACCOUNT => 'unknown user account',
     self::INCORRECT_USER_PASSWORD => 'invalid password',
+    self::USER_CONSENT_FETCH_FAILED => 'failed to fetch consent state from database',
 
     self::FEED_INVALID_TYPE => 'invalid type provided',
     self::FEED_SIDE_REQUIRED => 'side must be provided for type of Breastfeed',

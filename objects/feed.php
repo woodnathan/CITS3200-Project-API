@@ -1,7 +1,5 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/helpers/result.php');
-  
 // Suppress the PHP warning
 date_default_timezone_set('UTC');
 
@@ -22,7 +20,12 @@ abstract class APIFeedSide
   const Right = 2;
 }
 
-class APIFeed
+/**
+ * @brief An abstract class representing base functionality for the
+ *        APIEditFeed and APIAddFeed object
+ * @discussion These three classes could be refactored into a single class.
+ */
+abstract class APIFeed
 {
   protected $before_SID = null;
   protected $after_SID = null;
@@ -51,6 +54,13 @@ class APIFeed
     'R' => APIFeedSide::Right
   );
 
+  /**
+   * @brief This function is used to map strings to "enums"
+   * @param mapping An associative array with single uppercase letter strings
+   *                for the keys
+   * @param value   A string that will be used to find the matching value
+   * @return A value from the mapping array, or -1 if a value cannot be found
+   */
   private static function enum_from_string($mapping, $value)
   {
     if (!empty($value))
@@ -62,21 +72,45 @@ class APIFeed
     return -1;
   }
 
+  /**
+   * @brief This function will map a string to an APIFeedType enum
+   * @param value A string value representing the type
+   * @return An integer value from the APIFeedType enum, or -1 if a matching
+   *         type cannot be found
+   */
   protected static function type_from_string($value)
   {
     return APIFeed::enum_from_string(APIFeed::$type_mapping, $value);
   }
 
+  /**
+   * @brief This function will map a string to an APIFeedSubtype enum
+   * @param value A string value representing the subtype
+   * @return An integer value from the APIFeedSubtype enum, or -1 if a matching
+   *         type cannot be found
+   */
   protected static function subtype_from_string($value)
   {
     return APIFeed::enum_from_string(APIFeed::$subtype_mapping, $value);
   }
 
+  /**
+   * @brief This function will map a string to an APIFeedSide enum
+   * @param value A string value representing the side
+   * @return An integer value from the APIFeedSide enum, or -1 if a matching
+   *         type cannot be found
+   */
   protected static function side_from_string($value)
   {
     return APIFeed::enum_from_string(APIFeed::$side_mapping, $value);
   }
 
+  /**
+   * @brief This function will map an APIFeedType enum to a string
+   * @param value An integer value from the APIFeedType enum
+   * @return A single uppercase letter string representing the enum value
+   * @throws APIError
+   */
   protected static function string_from_type($value)
   {
     switch ($value)
@@ -93,6 +127,12 @@ class APIFeed
     throw new APIError(APIError::FEED_INVALID_TYPE);
   }
 
+  /**
+   * @brief This function will map an APIFeedSubtype enum to a string
+   * @param value An integer value from the APIFeedSubtype enum
+   * @return A single uppercase letter string representing the enum value
+   * @throws APIError
+   */
   protected static function string_from_subtype($value)
   {
     switch ($value)
@@ -107,6 +147,12 @@ class APIFeed
     return 'U';
   }
 
+  /**
+   * @brief This function will map an APIFeedSide enum to a string
+   * @param value An integer value from the APIFeedSide enum
+   * @return A single uppercase letter string representing the enum value
+   * @throws APIError
+   */
   protected static function string_from_side($value)
   {
     switch ($value)
@@ -121,19 +167,36 @@ class APIFeed
     return 'U';
   }
 
+  /**
+   * @brief This function determines whether the feed should be ignored for
+   *        calculation based on the type
+   * @param type An integer value from the APIFeedType enum
+   * @return true if the feed should be ignored, false otherwise
+   */
   protected static function ignore_calculation_for_type($type)
   {
     // If the feed_type is not Breastfeed, then disable the row by default
     return ($type !== APIFeedType::Breastfeed);
   }
 
+  /**
+   * @brief This function determines whether the feed should be ignored for
+   *        calculation based on the type
+   * @return A string value: 'Y' if the feed should be ignored for calculation,
+   *         or 'N' if the feed should not be ignored for calculation
+   */
   public function ignore_calculation()
   {
     $ignore = APIFeed::ignore_calculation_for_type($this->type);
     return ($ignore ? 'Y' : 'N');
   }
 
-  function validate()
+  /**
+   * @brief Validates the values of the feed
+   * @return nothing
+   * @throws APIError
+   */
+  public function validate()
   {
     if (!isset($this->type))
       throw new APIError(APIError::FEED_INVALID_TYPE);
@@ -157,6 +220,15 @@ class APIFeed
       throw new APIError(APIError::FEED_INVALID_DATES);
   }
 
+  /**
+   * @brief Sets the feed's property using the given JSON object
+   * @param json An stdClass instance representing the feed data
+   * @param db An mysqli instance to be used for escaping strings
+   * @return nothing
+   * @discussion The string escaping is really only necessary for the comment
+   *             as all of the other fields are parsed/corrected in some way
+   *             before being inserted into the database
+   */
   protected function fill_using_JSON($json, $db)
   {
     if (isset($json->type) && !empty($json->type))
@@ -203,6 +275,15 @@ class APIFeed
     }
   }
 
+  /**
+   * @brief Formats and returns the value for the field
+   * @param field a string value of the following values:
+   *          type, subtype, side, comment,
+   *          before_datetime, before_weight,
+   *          after_datetime, after_weight
+   * @return a string value for the specified field, or null if the field
+   *         does not exist
+   */
   public function get_value($field)
   {
     switch ($field)
@@ -229,6 +310,10 @@ class APIFeed
     return null;
   }
 
+  /**
+   * @brief Produces an associative array format representing the feed
+   * @return A nested associative array
+   */
   public function get_assoc()
   {
     $assoc = array(

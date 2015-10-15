@@ -9,15 +9,21 @@ require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/helpers/error.php');
  * @details Also provides conveniences like database connection and
  *          authentication
  */
-class APIHandler
+abstract class APIHandler
 {
   private $_database = null;
   private $_mid = null;
 
+  /**
+   * @brief Connects and returns a database connection
+   * @details This database will be closed as a part of the post execution
+   * @return A mysqli instance
+   */
   protected function database()
   {
     if ($this->_database == null)
     {
+      // connect_db is a function from the db_connect.php include
       $this->_database = connect_db();
     }
     return $this->_database;
@@ -69,10 +75,7 @@ class APIHandler
    * @brief Function stub for execution
    * @return An APIResult instance
    */
-  public function execute()
-  {
-
-  }
+  abstract public function execute();
 
   /**
    * @brief A function to be called after the execution of the handler
@@ -82,15 +85,6 @@ class APIHandler
   {
     if ($this->_database != null)
       $this->_database->close();
-  }
-
-  /**
-   * @brief A convenience method to create APIResult for an error (DEPRECATED)
-   * @return An APIResult instance
-   */
-  protected function error($message)
-  {
-    return APIResult::Error($message);
   }
 
   /**
@@ -104,6 +98,10 @@ class APIHandler
     return mysqli_real_escape_string($db, stripslashes($value));
   }
 
+  /**
+   * @brief Gets the motherID for the authenticated user
+   * @return The user's motherID
+   */
   protected function motherID()
   {
     return $this->_mid;
@@ -111,9 +109,9 @@ class APIHandler
 }
 
 /**
- * @brief A subclass of APIHandler that expects a JSON HTTP body
+ * @brief An abstract subclass of APIHandler that expects a JSON HTTP body
  */
-class APIJSONHandler extends APIHandler
+abstract class APIJSONHandler extends APIHandler
 {
   /**
    * @brief Overrides the default pre-execute function to ensure that

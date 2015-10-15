@@ -1,13 +1,16 @@
 <?php
 
-  require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/handler.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/milk/api/handler.php');
 
-  class APIAuthenticationHandler extends APIHandler
+/**
+ * @brief A deprecated handler for authentication
+ */
+class APIAuthenticationHandler extends APIHandler
+{
+  public function execute()
   {
-    public function execute()
-    {
-      return APIResult::Error('authenticate has been deprecated, use user_info instead');
-    }
+    return new APIErrorResult(APIError::API_ACTION_INVALID, 'authenticate has been deprecated, use user_info instead');
   }
+}
 
 ?>
