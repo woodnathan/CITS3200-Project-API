@@ -33,7 +33,7 @@ class APIUserInfoHandler extends APIHandler
 
     $query = <<<SQL
 SELECT COUNT(*) AS count FROM
-  mother_studies_type mst INNER JOIN mother_studies_econsent msec
+  `bbcs_v3`.`mother_studies_type` mst INNER JOIN `bbcs_v3`.`mother_studies_econsent` msec
     ON msec.MID = mst.MID
   WHERE
     mst.infoPump = msec.infoPump_consent AND
