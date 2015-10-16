@@ -1,0 +1,21 @@
+Installation
+--------------
+To install, copy the following files and directories to the webserver where the site resides:
+ - api.php
+ - context.php
+ - handler.php
+ - handlers/
+   - add_feeds.php
+   - authenticate.php
+   - delete_feeds.php
+   - edit_feeds.php
+   - get_feeds.php
+   - update_feeds_base.php
+   - user_info.php
+ - helpers/
+   - error.php
+   - result.php
+ - objects/
+   - add_feed.php
+   - edit_feed.php
+   - feed.php
